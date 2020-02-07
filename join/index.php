@@ -1,4 +1,5 @@
 <?php
+if (!empty($_POST)) {
 	if($_POST['name']=== '') {
 		$error['name'] = 'blank';
 	}
@@ -14,6 +15,13 @@
 	if($_POST['password']=== ''){
 		$error['password'] = 'blank';
 	}
+
+	if(empty($error)) {
+		header('Location: check.php');
+		exit();
+	}
+}
+
 
 ?>
 
