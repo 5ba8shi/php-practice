@@ -19,7 +19,10 @@ if (!empty($_POST)) {
 	}
 
 	if(empty($error)) {
+		$image = data('YmdHis') . $_FILES['image']['name'];
+		move_upload_file($_FILES['image']['tmp_name'], '../member_picture/' . $image);
 		$_SESSION['join'] = $_POST;
+		$_SESSION['join']['image'] = $image;  
 		header('Location: check.php');
 		exit();
 	}
