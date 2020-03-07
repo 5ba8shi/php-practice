@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if (!empty($_POST)) {
 	if ($_POST['name'] === ''){
 		$error['name'] = 'blank';
@@ -14,13 +15,19 @@ if (!empty($_POST)) {
 		$error['password'] = 'length';
 	}
 
+	$fileName = $_FILES['image']['name'];
+	if (!empty($fileName)) {
+		$ext = substr($fileName, -3);
+		if ($ext != 'jpg' && $ext != 'gif' && $ext != 'png') {
+			$error['image'] = 'type';
+		}
+	}
+
 	if (empty($error)) {
 		$image = date('YmdHis') . $_FILES['image']['name'];
 		move_upload_files($_FILES['image']['tmp_name'], '../member_picture/' . $image);
-
-
-
-		$_SESSION['join']=$_POST;
+		$_SESSION['join'] = $_POST;
+		$_SESSION['join']['image']= $image;
 		header('Location: check.php');
 		exit();
 	}
@@ -80,6 +87,12 @@ if ($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])) {
 		<dt>写真など</dt>
 		<dd>
         	<input type="file" name="image" size="35" value="test"  />
+					<?php if ($error['image'] == 'type'): ?>
+						<p class = "error">jpg,gif,pngのいづれかの画像ファイルをアップロードして下さい。</p>
+					<?php endif; ?>
+					<?php if (!empty($error)): ?>
+						<p class = "error">恐れ入りますが、画像を改めてアップロードしなおしてください。</p>
+					<?php endif; ?> 
         </dd>
 	</dl>
 	<div><input type="submit" value="入力内容を確認する" /></div>
